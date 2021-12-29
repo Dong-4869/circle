@@ -1,0 +1,161 @@
+<!-- 发布按钮 -->
+<view class='header'>
+  <text catchtap="toEdit" class='iconfont icon-xiangji r-right'></text>
+</view>
+
+<!-- 背景图、头像 -->
+<view class="top-relate">
+  <image
+    catchtap="chooseImage"
+    class="img-top"
+    src="{{imageTop?imageTop:'/image/pyq/1.jpg'}}"
+  > </image>
+  <text class="nickName">{{userInfo?userInfo.nickName:'wx用户'}}</text>
+  <text class="pText">{{pText?pText:""}}</text>
+  <image src="{{userInfo?userInfo.avatarUrl:'/image/pyq/10.jpg'}}" class="useravatar"></image>
+</view>
+
+<!-- 授权信息 -->
+<view wx:if="{{!userInfo}}" class="no-user">
+  <view class="row">
+    <view class="col">
+      <view class="content">
+        <text>发布、点赞、评论功能需授权小程序使用您的头像和昵称。</text>
+        <button
+          class='open-btn'
+          catchtap="getUserProfile"
+          size='mini'
+        > 点击此处获取头像昵称
+        </button>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 朋友圈内容 -->
+<view class="top-circle">
+  <view
+    class="circle"
+    wx:for="{{wallData}}"
+    wx:key="{{index}}"
+    wx:for-item="itemName"
+    wx:for-index="indexN"
+  >
+    <view class="row">
+      <!-- 头像 -->
+      <view>
+        <image class="userhead" src="{{itemName.avatarUrl}}"></image>
+      </view>
+      <!-- 具体内容 -->
+      <view
+        class="col"
+        catchtap='toDetail'
+        data-id="{{itemName.id}}"
+      >
+        <!-- 昵称、文本内容 -->
+        <view class="username" style="font-weight:600;">{{itemName.nickName}}</view>
+        <view class="content" data-text="{{itemName.content}}">
+          <text>{{itemName.content}}</text>
+        </view>
+        <!-- 图片内容 -->
+        <view class="li-imgs">
+          <block wx:for="{{itemName.images}}" wx:key="{{index}}">
+            <view>
+              <image
+                data-images="{{itemName.images}}"
+                catchtap="previewImage"
+                id="{{item}}"
+                class="li-img-one"
+                src="{{item}}"
+                mode="aspectFill"
+              />
+            </view>
+          </block>
+        </view>
+        <!-- 时间、图标 -->
+        <view class='timeArea'>
+          <!-- 地点 -->
+          <text style="font-size:small">{{itemName.address?"地点："+itemName.address+"\n":''}}</text>
+          <!-- 发布时间 -->
+          <text>{{itemName.createTime}}</text>
+
+          <!-- 赞，留言、...图标 -->
+          <view class='timeArea-right'>
+            <view class='zan-pinglun' wx:if="{{showZan == indexN}}">
+              <text class='iconfont icon-xin' 
+              data-indexN="{{indexN}}" 
+              data-id="{{itemName.id}}" 
+              catchtap='dianzan'> 赞</text>
+              <text catchtap="showPinLun" class='iconfont icon-pinglun'>留言</text>
+            </view>
+            <image
+              class="dd-icon"
+              src="/image/pyq/dd-icon.png"
+              data-index="{{indexN}}"
+              catchtap="toShowZan"
+            ></image>
+
+          </view>
+        </view>
+        <!-- 点赞留言区 -->
+        <view class="comm-zan">
+          <!-- 点赞 -->
+          <view wx:if='{{itemName.zans.length>0}}'>
+            <view class="r"></view>
+            <view class="zan">
+              <image class="love-icon" src="/image/pyq/love-icon.png"></image>
+              <text class="like">{{itemName.zans}}</text>
+            </view>
+          </view>
+          <!-- 留言 -->
+          <view wx:if='{{itemName.comments.length>0}}'>
+            <view wx:if='{{itemName.zans.length<=0}}' class="r"></view>
+
+            <view class="comments">
+              <view
+                wx:for="{{itemName.comments}}"
+                wx:key='{{index}}'
+                catchtap="bindComment"
+                data-index="{{index}}"
+                data-indexN="{{indexN}}"
+                data-name="{{item.userName}}"
+              >
+                <view class="tt-row" wx:if='{{!item.toName}}'>
+                  <text class="blueColor">{{item.userName+': '}}</text>
+                  <text class="noblueColor">{{item.content}}</text>
+                </view>
+
+                <view wx:if='{{item.toName}}'>
+                  <text class="blueColor">{{item.userName}}</text>
+                  <text class="noblueColor"> 回复</text>
+                  <text class="blueColor">{{item.toName+': '}}</text>
+                  <text class="noblueColor">{{item.content}}</text>
+                </view>
+              </view>
+
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 发布评论 -->
+<view wx:if='{{showPinLun}}'>
+  <form bindsubmit='submitComment'>
+    <view class='liuyan'>
+      <input
+        class='input'
+        auto-focus
+        cursor-spacing="32rpx"
+        value='{{commentValue}}'
+        bindinput='getcomment'
+        placeholder='{{placeholderPL}}'
+      ></input>
+      <button class='icon' form-type='submit'>发送</button>
+    </view>
+  </form>
+</view>
+

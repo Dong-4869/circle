@@ -1,0 +1,9 @@
+<view class='container'>
+  <view class='listGroup' wx:for='{{list}}' wx:for-item='group' wx:key='group{{index}}'>
+    <view class='listItem' wx:for='{{group}}' wx:for-item='row' wx:key='row{{index}}'>
+      <image src='{{row.icon}}'></image>
+      <text>{{row.text}}</text>
+      <image src='/image/fx/arrow.png'></image>
+    </view>
+  </view>
+</view>

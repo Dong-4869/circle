@@ -1,0 +1,8 @@
+//将字符串通过逗号分割成数组
+var toarray=function (value) {      
+  return (value || "").split(",")
+}
+
+module.exports = {
+  toarray: toarray
+};

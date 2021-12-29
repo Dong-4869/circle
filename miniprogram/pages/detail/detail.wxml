@@ -1,0 +1,121 @@
+<wxs module="common" src="../../utils/common.wxs"></wxs>
+
+<!-- 朋友圈内容 -->
+<view class="top-circle">
+  <view class="circle">
+    <view class="row">
+      <!-- 头像 -->
+      <view>
+        <image class="userhead" src="{{wallData.avatarUrl}}"></image>
+      </view>
+
+      <!-- 具体内容 -->
+      <view class="col">
+        <!-- 昵称、文本内容 -->
+        <view class="username" style="font-weight:600;">{{wallData.nickName}}</view>
+        <view class="content" data-text="{{wallData.content}}">
+          <text>{{wallData.content}}</text>
+        </view>
+        <view class="tongji">
+          <view>点赞数：{{wallData.zans?common.toarray(wallData.zans).length:0}}</view>
+          <view>评论数：{{wallData.comments.length}}</view>
+        </view>
+        <!-- 图片内容 -->
+        <view class="li-imgs">
+          <block wx:for="{{wallData.images}}" wx:key="{{index}}">
+            <view>
+              <image
+                data-images="{{wallData.images}}"
+                catchtap="previewImage"
+                id="{{item}}"
+                class="li-img-one"
+                src="{{item}}"
+                mode="aspectFill"
+              />
+            </view>
+          </block>
+        </view>
+        <!-- 时间、图标 -->
+        <view class='timeArea'>
+          <!-- 地点 -->
+          <text style="font-size:small">{{wallData.address?"地点："+wallData.address+"\n":''}}</text>
+          <!-- 发布时间 -->
+          <text>{{wallData.createTime}}</text>
+          <!-- 赞，留言、...图标 -->
+          <view class='timeArea-right'>
+            <view class='zan-pinglun' wx:if="{{showZan == 1}}">
+              <text class='iconfont icon-xin'  catchtap='dianzan'> 赞</text>
+              <text catchtap="showPinLun" class='iconfont icon-pinglun'>留言</text>
+            </view>
+            <image
+              class="dd-icon"
+              src="/image/pyq/dd-icon.png"
+              data-index="{{indexN}}"
+              catchtap="toShowZan"
+            ></image>
+          </view>
+        </view>
+
+        <!-- 点赞留言区 -->
+        <view class="comm-zan">
+          <!-- 点赞 -->
+          <view wx:if='{{wallData.zans.length>0}}'>
+            <view class="r"></view>
+            <view class="zan">
+              <image class="love-icon" src="/image/pyq/love-icon.png"></image>
+              <text class="like">{{wallData.zans}}</text>
+            </view>
+          </view>
+          <!-- 留言 -->
+          <view wx:if='{{wallData.comments.length>0}}'>
+            <view wx:if='{{wallData.zans.length<=0}}' class="r"></view>
+
+            <view class="comments">
+              <view
+              class="comment"
+                wx:for="{{wallData.comments}}"
+                wx:key="{{index}}"
+                catchtap="bindComment"
+                data-name="{{item.userName}}"
+              >
+                <view class="tt-row" wx:if='{{!item.toName}}'>
+                  <image class="pl_photo" src="{{item.avatarUrl}}"></image>
+                  <text class="blueColor">{{item.userName}}</text>
+                  <text class="noblueColor">{{item.content}}</text>
+                  <text class="shijian">{{item.createTime}}</text>
+                </view>
+
+                <view wx:if='{{item.toName}}'>
+                  <image class="pl_photo" src="{{item.avatarUrl}}"></image>
+                  <text class="blueColor">{{item.userName}}</text>
+                  <text class="noblueColor">回复</text>
+                  <text class="blueColor2">{{item.toName+': '}}</text>
+                  <text class="noblueColor">{{item.content}}</text>
+                  <text class="shijian">{{item.createTime}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 发布评论 -->
+<view wx:if='{{showPinLun}}'>
+  <form bindsubmit='submitComment'>
+    <view class='liuyan'>
+      <input
+        class='input'
+        auto-focus
+        cursor-spacing="32rpx"
+        value='{{commentValue}}'
+        bindinput='getcomment'
+        placeholder='{{placeholderPL}}'
+      ></input>
+      <button class='icon' form-type='submit'>发送</button>
+    </view>
+  </form>
+</view>
+

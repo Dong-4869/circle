@@ -1,0 +1,70 @@
+<!-- 发表按钮 -->
+<view class='edit-header'>
+  <button
+    class='header-delive'
+    size="mini"
+    bindtap="formSubmit"
+  >发表
+  </button>
+</view>
+
+<!-- 文本 -->
+<view class='edit-main'>
+  <textarea
+    class='edit-text'
+    auto-height
+    placeholder='这一刻的想法...'
+    placeholder-style='color:#888'
+    bindinput="getInputValue"
+  ></textarea>
+</view>
+
+<view class="weui-cells">
+  <!-- 图片上传 -->
+  <view class="weui-cell">
+    <view class="weui-cell__bd">
+      <view class="weui-uploader">
+        <view class="weui-uploader__hd">
+          <view class="weui-uploader__overview">
+            <view class="weui-uploader__title">图片上传</view>
+            <view class="weui-uploader__info">{{images.length}}/9</view>
+          </view>
+          <view class="weui-uploader__tips" wx:if="{{images.length>0}}">
+            长按删除
+          </view>
+        </view>
+        <view class="weui-uploader__bd">
+          <view class="weui-uploader__files" id="uploaderFiles">
+            <block wx:for="{{images}}" wx:key="{{index}}">
+              <view
+                class="weui-uploader__file"
+                bindlongtap="deleteImg"
+                data-index="{{index}}"
+                bindtap="previewImage"
+                id="{{item}}"
+              >
+                <image
+                  class="weui-uploader__img"
+                  src="{{item}}"
+                  mode="aspectFill"
+                />
+              </view>
+            </block>
+          </view>
+          <view class="weui-uploader__input-box" wx:if="{{images.length<9}}">
+            <view class="weui-uploader__input" bindtap="chooseImage"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <!-- 位置 -->
+  <view class="weui-cell">
+    <view class="weui-cell__bd">
+      <view  bindtap='chooseLoc'>所在位置：
+        <text class="location-color">{{locationName}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
